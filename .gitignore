@@ -1,0 +1,36 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environment files
+.env
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# All runtime data is regenerated automatically on server startup (synthetic
+# ledger/invoices/policies, SQLite app db, Chroma vector index, trained model)
+# — see backend/main.py's startup_event(). Never commit generated instance data.
+data/app.db
+data/models/
+data/vector_db/
+data/raw_ledgers/
+data/sample_invoices/
+data/policy_documents/
+
+server.log
+
+# Docker
+*.pyc

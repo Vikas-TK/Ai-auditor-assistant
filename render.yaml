@@ -1,0 +1,28 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# Import this repo at https://dashboard.render.com/blueprints to provision the service,
+# or let GitHub Actions redeploy an already-provisioned service via a deploy hook (see
+# .github/workflows/ci-cd.yml). Either way, set the `sync: false` secrets below in the
+# Render dashboard after first creation — they are never read from this file.
+services:
+  - type: web
+    name: ai-auditor-assistant
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      # Update to the service's actual onrender.com URL (or a custom domain) after
+      # first deploy if it differs from this default.
+      - key: ALLOWED_ORIGINS
+        value: https://ai-auditor-assistant.onrender.com
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "15"
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: "7"
+      - key: CURRENCY_SYMBOL
+        value: "$"
