@@ -2,8 +2,8 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# build-essential: some deps (chromadb/sentence-transformers/scikit-learn) pull in
-# packages without prebuilt wheels for every platform.
+# build-essential: some deps (chromadb/scikit-learn) pull in packages without
+# prebuilt wheels for every platform.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
     && rm -rf /var/lib/apt/lists/*

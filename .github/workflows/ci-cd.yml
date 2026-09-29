@@ -24,6 +24,10 @@ jobs:
       - name: Import sanity check
         env:
           JWT_SECRET_KEY: ci-test-secret
+          # rag_engine.py constructs the Gemini client classes at import time, which
+          # validates that *some* non-empty API key string is present (but does not
+          # call out to Google) — a dummy value is enough to satisfy that check.
+          GEMINI_API_KEY: ci-test-key
         run: python -c "import backend.main"
 
       - name: Build Docker image
