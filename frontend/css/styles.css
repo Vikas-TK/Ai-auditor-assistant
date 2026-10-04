@@ -67,6 +67,11 @@
   --font-display: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
+  /* Accent: Danger (destructive actions) */
+  --accent-danger: #dc2626;
+  --accent-danger-hover: #b91c1c;
+  --accent-danger-light: #fef2f2;
+
   /* Transitions */
   --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 250ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -460,6 +465,64 @@ header {
   transform: scale(1.04);
 }
 
+.btn-danger {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--radius-pill);
+  background: var(--accent-danger);
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1px solid var(--accent-danger);
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-danger:hover {
+  background: var(--accent-danger-hover);
+  border-color: var(--accent-danger-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+.btn-danger:active {
+  transform: translateY(0);
+}
+
+.btn-danger-ghost {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  background: #ffffff;
+  border: 1px solid var(--status-rose-border);
+  color: var(--accent-danger);
+  font-size: 12.5px;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+}
+
+.btn-danger-ghost:hover {
+  background: var(--accent-danger-light);
+  border-color: var(--accent-danger);
+}
+
+/* Accessible keyboard-focus ring — mirrors brand accent, independent of mouse hover states */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent-amber);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
 /* ═════════════════════════════════════════════════════════════════════
    Tables & Data Center Matrix
    ═════════════════════════════════════════════════════════════════════ */
@@ -522,6 +585,104 @@ header {
   overflow: hidden;
   background: #ffffff;
   box-shadow: var(--shadow-sm);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   Empty & Error States — shared by EmptyState.render() and Tables.renderTable()
+   ═════════════════════════════════════════════════════════════════════ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  border-radius: var(--radius-lg);
+  border: 1.5px dashed var(--border-muted);
+  background: var(--bg-card-muted);
+}
+
+.empty-state-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-xs);
+  color: var(--text-faint);
+}
+
+.empty-state-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.empty-state-message {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  max-width: 360px;
+  line-height: 1.5;
+}
+
+.empty-state-error .empty-state-icon {
+  color: var(--accent-danger);
+  border-color: var(--status-rose-border);
+}
+
+/* ═════════════════════════════════════════════════════════════════════
+   Skeleton Loaders — presentational-only placeholders while data is in flight
+   ═════════════════════════════════════════════════════════════════════ */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #e2e8f0;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-100%);
+  animation: skeletonShimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes skeletonShimmer {
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-text {
+  height: 12px;
+  border-radius: var(--radius-xs);
+}
+
+.skeleton-line {
+  height: 14px;
+  border-radius: var(--radius-xs);
+  margin-bottom: 8px;
+}
+
+.skeleton-circle {
+  border-radius: var(--radius-pill);
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after { animation: none; }
 }
 
 /* ═════════════════════════════════════════════════════════════════════
@@ -677,6 +838,92 @@ header {
 }
 
 /* ═════════════════════════════════════════════════════════════════════
+   Confirmation Dialog — centered modal for destructive actions
+   (distinct from the side Inspector drawer above)
+   ═════════════════════════════════════════════════════════════════════ */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(6px);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.confirm-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.confirm-dialog {
+  width: 100%;
+  max-width: 400px;
+  background: #ffffff;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  border: 1px solid var(--border-subtle);
+  transform: translateY(8px) scale(0.98);
+  transition: transform var(--transition-normal);
+  overflow: hidden;
+}
+
+.confirm-overlay.active .confirm-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.confirm-dialog-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.confirm-dialog-icon.is-danger {
+  background: var(--accent-danger-light);
+  color: var(--accent-danger);
+}
+
+.confirm-dialog-icon.is-neutral {
+  background: var(--accent-amber-light);
+  color: var(--accent-amber-hover);
+}
+
+.confirm-dialog-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.confirm-dialog-body {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  line-height: 1.55;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.confirm-dialog-actions > * {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ═════════════════════════════════════════════════════════════════════
    Dropzone & Upload
    ═════════════════════════════════════════════ */
 #recon-dropzone {
@@ -753,11 +1000,64 @@ input[type="range"]::-webkit-slider-thumb:hover {
   }
 }
 
-@media (max-width: 900px) {
+/* Desktop-large: roomier page gutters */
+@media (min-width: 1440px) {
+  .page-wrap {
+    max-width: 1440px;
+  }
+}
+
+/* Laptop / small desktop */
+@media (max-width: 1024px) {
   aside {
-    width: 250px;
+    width: 230px;
   }
   .section-title {
     font-size: 19px;
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 16px;
+  }
+  .card-head {
+    padding: 14px 16px;
+  }
+  .toolbar {
+    padding: 12px 14px;
+  }
+  .section-title {
+    font-size: 17px;
+  }
+  .drawer-content {
+    max-width: 100%;
+  }
+  .confirm-dialog {
+    max-width: 92vw;
+  }
+}
+
+/* Mobile */
+@media (max-width: 390px) {
+  .card-body {
+    padding: 14px;
+  }
+  .section-title {
+    font-size: 16px;
+  }
+  .kpi-value {
+    font-size: 20px;
+  }
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .section-actions {
+    width: 100%;
+  }
+  .btn-primary, .btn-amber, .btn-ghost, .btn-danger {
+    width: 100%;
   }
 }

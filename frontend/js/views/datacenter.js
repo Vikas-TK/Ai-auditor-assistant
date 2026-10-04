@@ -3,6 +3,7 @@ import { Toast } from '../components/toast.js';
 import { Tables } from '../components/tables.js';
 import { EmptyState } from '../components/emptyState.js';
 import { Modal } from '../components/modal.js';
+import { ConfirmDialog } from '../components/confirmDialog.js';
 import { Store } from '../store.js';
 
 let currentPage = 1;
@@ -88,7 +89,16 @@ export const DataCenterView = {
       };
       currentLimit = parseInt(limitSelect.value, 10) || 50;
     }
-    if (injectBtn) injectBtn.onclick = () => this.triggerInjection();
+    if (injectBtn) injectBtn.onclick = () => {
+      ConfirmDialog.open({
+        title: 'Regenerate ledger data?',
+        message: 'This replaces the entire ledger with a freshly generated set of exactly 100 balanced transactions per vendor. The current ledger for this scope will be lost.',
+        confirmLabel: 'Regenerate ledger',
+        cancelLabel: 'Cancel',
+        danger: true,
+        onConfirm: () => this.triggerInjection()
+      });
+    };
     if (prevBtn) prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; this.loadLedgerGrid(); } };
     if (nextBtn) nextBtn.onclick = () => { currentPage++; this.loadLedgerGrid(); };
     if (clearBtn) clearBtn.onclick = () => {

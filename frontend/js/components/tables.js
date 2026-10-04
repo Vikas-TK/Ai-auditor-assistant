@@ -8,10 +8,14 @@ export const Tables = {
 
     if (!data || data.length === 0) {
       container.innerHTML = `
-        <div class="p-10 text-center border border-dashed border-stone-300 rounded-xl bg-[#fbf8f3]/60">
-          <div class="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center mx-auto mb-3 shadow-sm text-stone-400">—</div>
-          <p class="text-sm font-semibold text-stone-700">No records found</p>
-          <p class="text-xs text-stone-500 mt-1">Try adjusting filters or switching vendor scope.</p>
+        <div class="empty-state">
+          <div class="empty-state-icon">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" d="M9 17.25v1.5m6-1.5v1.5m-10.5-15h15M4.5 3.75v16.5h15V3.75"/>
+            </svg>
+          </div>
+          <h4 class="empty-state-title">No records found</h4>
+          <p class="empty-state-message">Try adjusting filters or switching vendor scope.</p>
         </div>
       `;
       return;
