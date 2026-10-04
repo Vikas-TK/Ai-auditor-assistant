@@ -86,22 +86,50 @@ database/model logic were altered.
   inconsistency — left as-is, flagged here for anyone doing a future
   full-token-purity pass.
 
-## Testing method (please read before relying on "done")
+## Testing method
 
 Each step was verified by: re-running the grep sweep for stale classes,
 reviewing the full `git diff`, and curl-checking affected routes against
-the local dev server (`localhost:8000`) to confirm 200 responses and no
-broken asset paths. **Live interactive browser/console testing (clicking
-through flows, watching Network/Console tabs in a real browser) was NOT
-performed during this session** — only static code review and HTTP-level
-checks were used as a substitute. Before shipping, do a manual pass through
-each view in a browser to confirm pixel-level appearance and interaction
-behavior, especially: vendor picker modal open/close, sidebar drawer on a
-narrow viewport, toast stacking/dismissal, and the reconciliation/anomaly
-inspector drawers.
+the local dev server (`localhost:8000`).
+
+**End-to-end scripted API verification (added in a follow-up pass):** no
+browser-automation tool was available in this environment, so true
+click-through/DevTools testing could not be performed. As the closest
+practical substitute, every endpoint the frontend calls was exercised
+directly against the running dev server, following the real frontend flow
+(login → token → vendor-scoped calls):
+
+- `GET /api/health` → 200
+- `GET /api/public/vendors` → 200, vendor list returned
+- `POST /api/auth/login` (vendor_id from the list above) → 200, access/refresh tokens issued
+- `GET /api/auth/me` (bearer token) → 200
+- `GET /api/ledger?page=1&limit=5` (bearer + `X-Vendor-Context`) → 200, paginated records
+- `GET /api/ledger/stats` → 200
+- `POST /api/audit/anomalies?min_risk_score=50` → 200, risk-scored anomalies returned
+- `POST /api/rag/query` → 200, grounded answer with citations
+- `POST /api/report/generate` → 200, valid PDF stream (`%PDF` magic bytes, non-trivial size)
+- All 17 static asset routes referenced by `index.html` (`styles.css`, every `js/views/*.js`, `js/components/*.js`, `js/utils/format.js`, `about.html`) → 200
+- Cross-checked every `apiFetch(...)` call site in `frontend/js/api.js` against the backend's route table in `main.py` — all match exactly; no endpoint drift introduced by this pass.
+
+This confirms no route, auth flow, or static asset was broken by the UI
+changes. It does **not** substitute for a human visually confirming
+pixel-level appearance and interaction polish (modal open/close animation,
+sidebar drawer on a narrow viewport, toast stacking, drawer focus behavior)
+in an actual browser — that manual pass is still recommended before
+considering this fully shipped.
 
 ## Recommended backend changes (not implemented)
 
-None identified. No visual improvement encountered during this pass
-required a backend/API/data-shape change; everything achievable within the
-frontend-only constraint was implemented directly.
+- **`GET /api/rag/documents` throws a caught exception** and returns
+  `{"status":"ERROR","detail":"'Chroma' object has no attribute 'count'"}`
+  (HTTP 200, error embedded in the body). Root cause is a ChromaDB
+  client/API version mismatch in `get_chroma_collection()` inside
+  `backend/services/rag_engine.py` — pre-existing, unrelated to this UI
+  pass, and not touched since it's backend/service logic. **Not a visible
+  break**: `rag.js`'s `loadKnowledgeBaseStats()` already guards for a
+  missing `policy_files`/`total_vector_chunks` and falls back to
+  placeholder values (`2` docs, `12` chunks), so the Policy Copilot panel
+  still renders correctly — it just silently shows stale placeholder counts
+  instead of the real ChromaDB totals. Recommended fix: update
+  `get_chroma_collection()`/the `count()` call to match the installed
+  `chromadb` client API.
