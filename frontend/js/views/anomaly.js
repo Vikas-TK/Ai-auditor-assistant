@@ -4,6 +4,7 @@ import { Modal } from '../components/modal.js';
 import { Tables } from '../components/tables.js';
 import { Store } from '../store.js';
 import { EmptyState } from '../components/emptyState.js';
+import { formatINR } from '../utils/format.js';
 
 let heatmapChart = null;
 
@@ -126,7 +127,7 @@ export const AnomalyView = {
             callbacks: {
               label: (ctx) => {
                 const raw = ctx.raw;
-                return `${raw.vendor} (${raw.txnId}): ₹${raw.y.toLocaleString('en-IN')} at ${raw.x}:00 [Risk: ${raw.score}%]`;
+                return `${raw.vendor} (${raw.txnId}): ${formatINR(raw.y)} at ${raw.x}:00 [Risk: ${raw.score}%]`;
               }
             }
           }
@@ -168,7 +169,7 @@ export const AnomalyView = {
       { label: 'Txn ID', key: 'transaction_id' },
       { label: 'Date/Time', key: 'date', render: (val, row) => `${val} ${row.time}` },
       { label: 'Vendor', key: 'vendor_name' },
-      { label: 'Amount (₹)', key: 'amount', render: (val) => `₹${val.toLocaleString('en-IN', {minimumFractionDigits: 2})}` },
+      { label: 'Amount (₹)', key: 'amount', render: (val) => formatINR(val) },
       { 
         label: 'Risk Score', 
         key: 'risk_score', 
@@ -225,7 +226,7 @@ export const AnomalyView = {
             <h4 class="font-semibold text-stone-900 text-sm">${row.vendor_name} (${row.transaction_id})</h4>
             <span class="px-2 py-0.5 text-xs font-bold rounded ${row.risk_score >= 75 ? 'badge-mismatch' : 'badge-warning'}">${row.risk_score}% Risk</span>
           </div>
-          <p class="text-xs text-stone-600">Amount: <b>₹${row.amount.toLocaleString('en-IN')}</b> | Recorded: ${row.date} at ${row.time}</p>
+          <p class="text-xs text-stone-600">Amount: <b>${formatINR(row.amount)}</b> | Recorded: ${row.date} at ${row.time}</p>
         </div>
 
         <div class="p-3 bg-[#fbf8f3] rounded-lg border border-stone-200">
