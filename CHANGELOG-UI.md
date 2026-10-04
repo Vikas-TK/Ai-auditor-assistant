@@ -111,6 +111,23 @@ directly against the running dev server, following the real frontend flow
 - All 17 static asset routes referenced by `index.html` (`styles.css`, every `js/views/*.js`, `js/components/*.js`, `js/utils/format.js`, `about.html`) → 200
 - Cross-checked every `apiFetch(...)` call site in `frontend/js/api.js` against the backend's route table in `main.py` — all match exactly; no endpoint drift introduced by this pass.
 
+**Follow-up pass** — exercised the remaining non-destructive endpoints that
+were initially deferred:
+
+- `POST /api/auth/refresh` → 200, new access/refresh token pair issued
+- `POST /api/auth/logout` → 200, `{"status":"SUCCESS"}`
+- `POST /api/recon/upload` (real sample PDFs from `data/sample_invoices/`) →
+  200; Gemini PDF extraction, vendor fuzzy-matching, and amount-variance
+  detection all returned correctly structured results (one
+  `AMOUNT_MISMATCH`, one `UNRECORDED_INVOICE`)
+
+Deliberately still **not** exercised: `POST /api/auditors/vendors/create`
+and `POST /api/ledger/inject-anomalies` — both mutate persistent data
+(create a vendor record / inject anomalies into the ledger), and a
+verification pass shouldn't leave side effects in shared data as its own
+side effect. Their request/response wiring was already confirmed by the
+static `apiFetch()` cross-check above; only the live mutation was skipped.
+
 This confirms no route, auth flow, or static asset was broken by the UI
 changes. It does **not** substitute for a human visually confirming
 pixel-level appearance and interaction polish (modal open/close animation,
