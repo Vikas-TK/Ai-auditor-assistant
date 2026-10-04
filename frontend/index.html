@@ -364,7 +364,7 @@
                 <div class="section-title">3-Way Reconciliation Workspace</div>
                 <div class="section-sub">Reconcile vendor GST tax invoices against the General Ledger using Automated OCR.</div>
               </div>
-              <span class="hidden sm:inline-flex text-xs font-semibold text-slate-700 bg-white border border-slate-200 px-3 py-1 rounded-full shadow-xs">
+              <span class="hidden sm:inline-flex text-xs font-semibold text-stone-700 bg-white border border-stone-200 px-3 py-1 rounded-full shadow-xs">
                 Vendor-Scoped • Gemini OCR
               </span>
             </div>
@@ -373,8 +373,8 @@
               <!-- Upload Box -->
               <div class="fintech-card p-5 space-y-4 h-fit">
                 <div>
-                  <div class="font-display text-sm font-bold text-slate-900">1. Upload GST Invoices</div>
-                  <p class="text-xs text-slate-500 mt-1 leading-relaxed">
+                  <div class="font-display text-sm font-bold text-stone-900">1. Upload GST Invoices</div>
+                  <p class="text-xs text-stone-500 mt-1 leading-relaxed">
                     Upload vendor GST invoice PDFs. OCR extracts invoice number, vendor name, line items, and totals.
                   </p>
                 </div>
@@ -383,8 +383,8 @@
                   <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center mx-auto shadow-sm">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
                   </div>
-                  <div class="text-xs font-bold text-slate-900 mt-3">Click or Drag & Drop PDF Invoices</div>
-                  <div class="text-[11px] text-slate-500 mt-1">Supports multi-page GST invoices (₹)</div>
+                  <div class="text-xs font-bold text-stone-900 mt-3">Click or Drag & Drop PDF Invoices</div>
+                  <div class="text-[11px] text-stone-500 mt-1">Supports multi-page GST invoices (₹)</div>
                   <input type="file" id="recon-file-input" multiple accept=".pdf" class="hidden">
                 </div>
 
@@ -393,23 +393,23 @@
                 <button id="recon-run-btn" class="w-full h-10 btn-amber justify-center rounded-xl shadow-md">
                   Run 3-Way Reconciliation
                 </button>
-                <p class="text-[11px] text-slate-400 text-center">Matches strictly against the currently selected vendor scope.</p>
+                <p class="text-[11px] text-stone-400 text-center">Matches strictly against the currently selected vendor scope.</p>
               </div>
 
               <!-- Match Matrix Table -->
               <div class="lg:col-span-2 fintech-card flex flex-col min-h-[420px]">
                 <div class="card-head">
-                  <div class="font-display text-[13.5px] font-bold text-slate-900">3-Way Match Matrix</div>
-                  <span class="text-xs text-slate-500 font-medium">GST Invoices vs General Ledger</span>
+                  <div class="font-display text-[13.5px] font-bold text-stone-900">3-Way Match Matrix</div>
+                  <span class="text-xs text-stone-500 font-medium">GST Invoices vs General Ledger</span>
                 </div>
                 <div class="card-body flex-1">
                   <div id="recon-results-container">
-                    <div class="p-10 text-center border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
-                      <div class="w-12 h-12 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mx-auto text-slate-400 shadow-xs">
+                    <div class="p-10 text-center border-2 border-dashed border-stone-200 rounded-xl bg-stone-50/50">
+                      <div class="w-12 h-12 rounded-2xl bg-white border border-stone-200 flex items-center justify-center mx-auto text-stone-400 shadow-xs">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                       </div>
-                      <p class="text-xs font-bold text-slate-700 mt-3">No Reconciliation Results Yet</p>
-                      <p class="text-[11.5px] text-slate-500 mt-1">Upload PDF invoices and trigger reconciliation to audit variances.</p>
+                      <p class="text-xs font-bold text-stone-700 mt-3">No Reconciliation Results Yet</p>
+                      <p class="text-[11.5px] text-stone-500 mt-1">Upload PDF invoices and trigger reconciliation to audit variances.</p>
                     </div>
                   </div>
                 </div>

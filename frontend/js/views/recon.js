@@ -4,6 +4,7 @@ import { Modal } from '../components/modal.js';
 import { Tables } from '../components/tables.js';
 import { Store } from '../store.js';
 import { EmptyState } from '../components/emptyState.js';
+import { formatINR } from '../utils/format.js';
 
 let selectedFiles = [];
 
@@ -121,20 +122,20 @@ export const ReconView = {
     const columns = [
       { label: 'Invoice #', key: 'invoice_number_extracted' },
       { label: 'Vendor Name', key: 'vendor_name_extracted' },
-      { 
-        label: 'PDF Amount (₹)', 
-        key: 'pdf_amount', 
-        render: (val) => `₹${val.toLocaleString('en-IN', {minimumFractionDigits: 2})}` 
+      {
+        label: 'PDF Amount (₹)',
+        key: 'pdf_amount',
+        render: (val) => formatINR(val)
       },
-      { 
-        label: 'Ledger Amount (₹)', 
-        key: 'ledger_amount', 
-        render: (val) => `₹${val.toLocaleString('en-IN', {minimumFractionDigits: 2})}` 
+      {
+        label: 'Ledger Amount (₹)',
+        key: 'ledger_amount',
+        render: (val) => formatINR(val)
       },
-      { 
-        label: 'Variance (₹)', 
-        key: 'variance_amount', 
-        render: (val) => `<span class="${val !== 0 ? 'text-rose-700 font-bold' : 'text-stone-500'}">${val > 0 ? '+' : ''}₹${val.toLocaleString('en-IN', {minimumFractionDigits: 2})}</span>` 
+      {
+        label: 'Variance (₹)',
+        key: 'variance_amount',
+        render: (val) => `<span class="${val !== 0 ? 'text-rose-700 font-bold' : 'text-stone-500'}">${val > 0 ? '+' : ''}${formatINR(val)}</span>`
       },
       { 
         label: 'Status', 
@@ -169,7 +170,7 @@ export const ReconView = {
             <div><span class="text-stone-500">Status:</span> <b class="${row.status === 'MATCHED' ? 'text-emerald-700' : 'text-rose-700'}">${row.status}</b></div>
             <div><span class="text-stone-500">Confidence:</span> <b class="text-amber-700">${row.match_confidence}%</b></div>
             <div><span class="text-stone-500">Matched Txn ID:</span> <b class="text-stone-800">${row.matched_ledger_id}</b></div>
-            <div><span class="text-stone-500">Variance:</span> <b class="text-amber-800">₹${row.variance_amount}</b></div>
+            <div><span class="text-stone-500">Variance:</span> <b class="text-amber-800">${formatINR(row.variance_amount)}</b></div>
           </div>
         </div>
 
@@ -180,7 +181,7 @@ export const ReconView = {
             <div class="space-y-1.5 text-xs text-stone-700">
               <div><span class="text-stone-500">Vendor:</span> ${row.vendor_name_extracted}</div>
               <div><span class="text-stone-500">Invoice #:</span> ${row.invoice_number_extracted}</div>
-              <div><span class="text-stone-500">Total Amt:</span> <b>₹${row.pdf_amount}</b></div>
+              <div><span class="text-stone-500">Total Amt:</span> <b>${formatINR(row.pdf_amount)}</b></div>
               <div><span class="text-stone-500">File:</span> ${row.invoice_filename}</div>
             </div>
           </div>
@@ -191,7 +192,7 @@ export const ReconView = {
             <div class="space-y-1.5 text-xs text-stone-700">
               <div><span class="text-stone-500">Vendor:</span> ${row.ledger_vendor_name || 'N/A'}</div>
               <div><span class="text-stone-500">Txn ID:</span> ${row.matched_ledger_id}</div>
-              <div><span class="text-stone-500">Ledger Amt:</span> <b>₹${row.ledger_amount || 0}</b></div>
+              <div><span class="text-stone-500">Ledger Amt:</span> <b>${formatINR(row.ledger_amount || 0)}</b></div>
               <div><span class="text-stone-500">Source:</span> corporate_ledger.csv</div>
             </div>
           </div>
