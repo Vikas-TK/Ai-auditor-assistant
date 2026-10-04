@@ -5,6 +5,7 @@ import { EmptyState } from '../components/emptyState.js';
 import { Modal } from '../components/modal.js';
 import { ConfirmDialog } from '../components/confirmDialog.js';
 import { Store } from '../store.js';
+import { formatINR } from '../utils/format.js';
 
 let currentPage = 1;
 let currentLimit = 50;
@@ -144,7 +145,7 @@ export const DataCenterView = {
       }
       if (anomEl) anomEl.textContent = stats.anomaly_records.toLocaleString('en-IN');
       if (anomSub) anomSub.textContent = stats.total_records ? `${((stats.anomaly_records / stats.total_records) * 100).toFixed(1)}% flagged` : '0% flagged';
-      if (amtEl) amtEl.textContent = `₹${stats.total_amount.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`;
+      if (amtEl) amtEl.textContent = formatINR(stats.total_amount);
       if (scopeBadge) {
         scopeBadge.textContent = stats.vendor_scope === 'ALL' ? 'Scope: All Vendors (Global)' : `Scope: ${stats.vendor_scope}`;
         scopeBadge.className = 'hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full ' + (stats.vendor_scope === 'ALL' ? 'bg-stone-900 text-white' : 'bg-amber-100 text-amber-800 border border-amber-300');
@@ -331,7 +332,7 @@ export const DataCenterView = {
       { label: 'Amount (₹)', key: 'amount', sortable: true, render: (val) => {
         const n = Number(val)||0;
         const cls = n < 0 ? 'text-rose-700' : 'text-stone-900';
-        return `<span class="font-semibold ${cls} whitespace-nowrap">₹${n.toLocaleString('en-IN', {minimumFractionDigits: 2})}</span>`;
+        return `<span class="font-semibold ${cls} whitespace-nowrap">${formatINR(n)}</span>`;
       }},
       { 
         label: 'Status', 
@@ -404,7 +405,7 @@ export const DataCenterView = {
           </div>
           <div class="grid grid-cols-2 gap-3 mt-3 text-xs">
             <div><span class="text-stone-500">Date</span><div class="font-medium text-stone-900">${row.date} ${row.time||''}</div></div>
-            <div><span class="text-stone-500">Amount</span><div class="font-bold ${amt<0?'text-rose-700':'text-stone-900'}">₹${amt.toLocaleString('en-IN', {minimumFractionDigits:2})}</div></div>
+            <div><span class="text-stone-500">Amount</span><div class="font-bold ${amt<0?'text-rose-700':'text-stone-900'}">${formatINR(amt)}</div></div>
             <div><span class="text-stone-500">Department</span><div class="font-medium text-stone-900">${row.department||'—'}</div></div>
             <div><span class="text-stone-500">Category</span><div class="font-medium text-stone-900">${row.category||'General'}</div></div>
             <div><span class="text-stone-500">Payment</span><div class="font-medium text-stone-900">${row.payment_method||'—'}</div></div>
