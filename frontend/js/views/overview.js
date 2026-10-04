@@ -2,6 +2,8 @@ import { ApiClient } from '../api.js';
 import { Toast } from '../components/toast.js';
 import { Store } from '../store.js';
 import { EmptyState } from '../components/emptyState.js';
+import { Tables } from '../components/tables.js';
+import { formatINR } from '../utils/format.js';
 
 let deptChart = null;
 let trendChart = null;
@@ -12,12 +14,16 @@ export const OverviewView = {
       let anomalies = Store.get('anomaliesData');
       let summary = Store.get('anomaliesSummary');
 
+      const epoch = Store.getVendorEpoch();
+      this.setLoading(true);
+
+      const statsPromise = ApiClient.getLedgerStats().catch(err => {
+        console.warn('Ledger stats fetch failed:', err);
+        return null;
+      });
+
       if (!anomalies) {
-        const epoch = Store.getVendorEpoch();
-        this.setLoading(true);
         const data = await ApiClient.detectAnomalies(0.0);
-        this.setLoading(false);
-        // Bail if the vendor/session context moved on while this was in flight.
         if (epoch !== Store.getVendorEpoch()) return;
 
         summary = data.summary || {};
@@ -26,13 +32,17 @@ export const OverviewView = {
         Store.set('anomaliesSummary', summary);
       }
 
-      // Update KPI Bar (INR ₹). Use `?? 0`, not `||`, so a genuine zero
-      // (e.g. a freshly provisioned vendor with no transactions) isn't
-      // masked by the placeholder fallback.
-      document.getElementById('kpi-total-ledger').innerText = '₹1,84,50,200';
+      const stats = await statsPromise;
+      if (epoch !== Store.getVendorEpoch()) return;
+
+      this.setLoading(false);
+
+      document.getElementById('kpi-total-ledger').innerText = stats
+        ? formatINR(stats.total_amount)
+        : '—';
       document.getElementById('kpi-audited-count').innerText = (summary.total_transactions_audited ?? 0).toLocaleString('en-IN');
       document.getElementById('kpi-flagged-count').innerText = summary.total_anomalies_flagged ?? 0;
-      document.getElementById('kpi-at-risk-amt').innerText = `₹${(summary.total_at_risk_amount ?? 0).toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('kpi-at-risk-amt').innerText = formatINR(summary.total_at_risk_amount ?? 0);
 
       this.renderCharts(anomalies);
       this.renderActivityStream(anomalies);
@@ -45,7 +55,7 @@ export const OverviewView = {
   },
 
   setLoading(isLoading) {
-    ['kpi-audited-count', 'kpi-flagged-count', 'kpi-at-risk-amt'].forEach(id => {
+    ['kpi-total-ledger', 'kpi-audited-count', 'kpi-flagged-count', 'kpi-at-risk-amt'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.innerText = isLoading ? '…' : el.innerText;
     });
@@ -60,14 +70,12 @@ export const OverviewView = {
     const deptCtx = document.getElementById('chart-dept-risk');
     if (deptCtx) {
       if (deptChart) deptChart.destroy();
-
       const depts = {'IT': 0, 'Travel': 0, 'Operations': 0, 'Marketing': 0, 'Finance': 0, 'Logistics': 0};
       anomalies.forEach(a => {
         const d = a.department || 'Operations';
         if (depts[d] !== undefined) depts[d] += (a.risk_score >= 50 ? 1 : 0);
         else depts[d] = 1;
       });
-
       deptChart = new Chart(deptCtx, {
         type: 'bar',
         data: {
@@ -75,59 +83,67 @@ export const OverviewView = {
           datasets: [{
             label: 'Flagged Anomalies',
             data: Object.values(depts),
-            backgroundColor: 'rgba(217, 119, 6, 0.75)',
-            borderColor: '#d97706',
-            borderWidth: 1,
-            borderRadius: 4
+            backgroundColor: 'rgba(217, 119, 6, 0.85)',
+            hoverBackgroundColor: '#d97706',
+            borderRadius: 6,
+            borderSkipped: false,
+            maxBarThickness: 42
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { display: false } },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1c1917',
+              padding: 10,
+              titleFont: { size: 12, weight: '600' },
+              bodyFont: { size: 12 },
+              cornerRadius: 8,
+              displayColors: false
+            }
+          },
           scales: {
-            x: { grid: { color: '#e7dfd3' }, ticks: { color: '#57534e' } },
-            y: { grid: { color: '#e7dfd3' }, ticks: { color: '#57534e' } }
+            x: { grid: { display: false }, ticks: { color: '#78716c', font: { size: 11 } }, border: { display: false } },
+            y: { beginAtZero: true, ticks: { color: '#78716c', font: { size: 11 }, precision: 0 }, grid: { color: '#f0ebe1' }, border: { display: false } }
           }
         }
       });
     }
 
     // 2. Risk Severity Trend Line Chart
+    // NOTE: this series is illustrative placeholder data, not derived from the
+    // live ledger — left untouched per product decision; restyled only.
     const trendCtx = document.getElementById('chart-risk-trend');
     if (trendCtx) {
       if (trendChart) trendChart.destroy();
-
       trendChart = new Chart(trendCtx, {
         type: 'line',
         data: {
           labels: ['Jan 05', 'Jan 15', 'Jan 25', 'Feb 05', 'Feb 15', 'Feb 25', 'Mar 05'],
           datasets: [
-            {
-              label: 'Critical Risk Items',
-              data: [3, 8, 4, 12, 18, 9, 15],
-              borderColor: '#be123c',
-              backgroundColor: 'rgba(190, 18, 60, 0.08)',
-              fill: true,
-              tension: 0.4
-            },
-            {
-              label: 'Medium Risk Items',
-              data: [12, 19, 15, 25, 30, 22, 28],
-              borderColor: '#b45309',
-              backgroundColor: 'rgba(180, 83, 9, 0.08)',
-              fill: true,
-              tension: 0.4
-            }
+            { label: 'Critical Risk Items', data: [3, 8, 4, 12, 18, 9, 15], borderColor: '#be123c', backgroundColor: 'rgba(190, 18, 60, 0.08)', pointBackgroundColor: '#be123c', pointBorderColor: '#fff', pointBorderWidth: 1.5, pointRadius: 3, pointHoverRadius: 5, borderWidth: 2, fill: true, tension: 0.4 },
+            { label: 'Medium Risk Items', data: [12, 19, 15, 25, 30, 22, 28], borderColor: '#b45309', backgroundColor: 'rgba(180, 83, 9, 0.08)', pointBackgroundColor: '#b45309', pointBorderColor: '#fff', pointBorderWidth: 1.5, pointRadius: 3, pointHoverRadius: 5, borderWidth: 2, fill: true, tension: 0.4 }
           ]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { labels: { color: '#44403c' } } },
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#57534e', font: { size: 11.5 }, boxWidth: 10, boxHeight: 10, usePointStyle: true, pointStyle: 'circle' } },
+            tooltip: {
+              backgroundColor: '#1c1917',
+              padding: 10,
+              titleFont: { size: 12, weight: '600' },
+              bodyFont: { size: 12 },
+              cornerRadius: 8
+            }
+          },
           scales: {
-            x: { grid: { color: '#e7dfd3' }, ticks: { color: '#57534e' } },
-            y: { grid: { color: '#e7dfd3' }, ticks: { color: '#57534e' } }
+            x: { grid: { display: false }, ticks: { color: '#78716c', font: { size: 11 } }, border: { display: false } },
+            y: { beginAtZero: true, ticks: { color: '#78716c', font: { size: 11 }, precision: 0 }, grid: { color: '#f0ebe1' }, border: { display: false } }
           }
         }
       });
@@ -135,9 +151,6 @@ export const OverviewView = {
   },
 
   renderActivityStream(anomalies) {
-    const container = document.getElementById('activity-stream-container');
-    if (!container) return;
-
     const summary = Store.get('anomaliesSummary') || {};
     if (summary.total_transactions_audited === 0) {
       EmptyState.render('activity-stream-container', {
@@ -148,33 +161,36 @@ export const OverviewView = {
     }
 
     const topItems = anomalies.filter(a => a.risk_score >= 50).slice(0, 6);
-    let html = '';
 
-    topItems.forEach(item => {
-      const isCritical = item.risk_score >= 75;
-      const badgeClass = isCritical ? 'badge-mismatch' : 'badge-warning';
+    if (topItems.length === 0) {
+      EmptyState.render('activity-stream-container', {
+        title: 'No high-risk anomalies',
+        message: 'Nothing in this vendor scope is currently flagged at 50% risk or above.'
+      });
+      return;
+    }
 
-      html += `
-        <div class="p-3 bg-[#fbf8f3] border border-stone-200 rounded-lg flex items-start gap-3 shadow-xs">
-          <div class="p-2 rounded-lg ${isCritical ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'}">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between">
-              <span class="font-semibold text-stone-900 text-xs">${item.vendor_name} (${item.transaction_id})</span>
-              <span class="text-xs px-2 py-0.5 rounded font-semibold ${badgeClass}">${item.risk_score}% Risk</span>
-            </div>
-            <p class="text-xs text-stone-600 mt-1 line-clamp-1">${item.primary_reason}</p>
-            <div class="flex items-center gap-3 mt-1.5 text-[11px] text-stone-500">
-              <span>Amt: <b>₹${item.amount.toLocaleString('en-IN', {minimumFractionDigits: 2})}</b></span>
-              <span>Time: ${item.time}</span>
-              <span>Dept: ${item.department || 'General'}</span>
-            </div>
-          </div>
-        </div>
-      `;
+    const columns = [
+      { label: 'Vendor / Txn ID', key: 'vendor_name', render: (val, row) => `${val} <span class="text-stone-400">(${row.transaction_id})</span>` },
+      { label: 'Amount (₹)', key: 'amount', render: (val) => formatINR(val) },
+      { label: 'Dept', key: 'department', render: (val) => val || 'General' },
+      { label: 'Time', key: 'time' },
+      { label: 'Primary Reason', key: 'primary_reason' },
+      {
+        label: 'Risk',
+        key: 'risk_score',
+        render: (val) => {
+          const badgeClass = val >= 75 ? 'badge-mismatch' : 'badge-warning';
+          return `<span class="px-2.5 py-1 text-xs font-semibold rounded ${badgeClass}">${val}%</span>`;
+        }
+      }
+    ];
+
+    Tables.renderTable({
+      containerId: 'activity-stream-container',
+      columns,
+      data: topItems,
+      onRowClick: () => window.app.switchView('anomaly')
     });
-
-    container.innerHTML = html || '<p class="text-stone-500 text-xs">No recent high-risk anomalies.</p>';
   }
 };
