@@ -14,7 +14,7 @@ export const Modal = {
         <div class="drawer-content" role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabindex="-1">
           <div class="p-4 border-b border-stone-200 flex justify-between items-center bg-[#fbf8f3] sticky top-0 z-10">
             <h3 id="drawer-title" class="text-[13px] font-semibold text-stone-900 flex items-center gap-2 tracking-tight">Inspector</h3>
-            <button id="drawer-close-btn" class="w-8 h-8 rounded-full bg-white border border-stone-200 text-stone-500 hover:text-stone-900 hover:border-stone-300 hover:shadow-sm flex items-center justify-center transition-all">
+            <button id="drawer-close-btn" aria-label="Close inspector" class="w-8 h-8 rounded-full bg-white border border-stone-200 text-stone-500 hover:text-stone-900 hover:border-stone-300 hover:shadow-sm flex items-center justify-center transition-all">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
           </div>

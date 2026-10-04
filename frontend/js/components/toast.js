@@ -7,6 +7,8 @@ export const Toast = {
     if (!container) {
       container = document.createElement('div');
       container.id = 'toast-container';
+      container.setAttribute('role', 'status');
+      container.setAttribute('aria-live', 'polite');
       container.className = 'fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none';
       document.body.appendChild(container);
     }
@@ -21,7 +23,7 @@ export const Toast = {
       success: `<span class="w-6 h-6 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-300">${iconSvg.success}</span>`,
       error: `<span class="w-6 h-6 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-300">${iconSvg.error}</span>`,
       warning: `<span class="w-6 h-6 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-300">${iconSvg.warning}</span>`,
-      info: `<span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-slate-200">${iconSvg.info}</span>`
+      info: `<span class="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-stone-200">${iconSvg.info}</span>`
     };
     const toast = document.createElement('div');
     toast.className = `pointer-events-auto pl-2 pr-3 py-2 rounded-full shadow-xl text-sm font-medium border backdrop-blur-xl transition-all transform translate-y-2 opacity-0 flex items-center gap-2.5 ${
@@ -34,7 +36,7 @@ export const Toast = {
     toast.innerHTML = `
       ${icons[type] || icons.info}
       <span class="pr-1 leading-none tracking-tight">${message}</span>
-      <button class="ml-auto w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center opacity-70 hover:opacity-100 text-white transition-colors">${iconSvg.error}</button>
+      <button aria-label="Dismiss notification" class="ml-auto w-6 h-6 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center opacity-70 hover:opacity-100 text-white transition-colors">${iconSvg.error}</button>
     `;
 
     container.appendChild(toast);

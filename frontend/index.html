@@ -35,11 +35,11 @@
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.469.0/dist/umd/lucide.js"></script>
   <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col font-sans overflow-x-hidden antialiased selection:bg-amber-200 selection:text-amber-900">
+<body class="bg-stone-50 text-stone-900 min-h-screen flex flex-col font-sans overflow-x-hidden antialiased selection:bg-amber-200 selection:text-amber-900">
 
   <!-- SIGN-IN / VENDOR PICKER MODAL -->
-  <div id="vendor-picker-screen" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/40 backdrop-blur-md">
-    <div class="fintech-card w-full max-w-[500px] p-8 relative overflow-hidden bg-white shadow-2xl border border-slate-200">
+  <div id="vendor-picker-screen" role="dialog" aria-modal="true" aria-label="Select vendor workspace" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-stone-900/40 backdrop-blur-md">
+    <div class="fintech-card w-full max-w-[500px] p-8 relative overflow-hidden bg-white shadow-2xl border border-stone-200">
       <div class="absolute -top-24 -right-24 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
       
       <div id="vendor-picker-list-view">
@@ -48,58 +48,58 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
           </div>
           <div>
-            <h1 class="font-display font-bold text-base text-slate-900 tracking-tight">Select Audit Workspace</h1>
-            <p class="text-xs text-slate-500 mt-0.5">Choose an existing vendor scope or create a new audit session.</p>
+            <h1 class="font-display font-bold text-base text-stone-900 tracking-tight">Select Audit Workspace</h1>
+            <p class="text-xs text-stone-500 mt-0.5">Choose an existing vendor scope or create a new audit session.</p>
           </div>
         </div>
 
-        <button id="vendor-picker-all-btn" class="w-full text-left px-4 py-3.5 mb-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl flex items-center justify-between shadow-md transition-all group">
+        <button id="vendor-picker-all-btn" class="w-full text-left px-4 py-3.5 mb-3.5 bg-stone-900 hover:bg-stone-800 text-white rounded-xl flex items-center justify-between shadow-md transition-all group">
           <div>
             <div class="text-sm font-semibold flex items-center gap-2">
               <span>All Vendors — Global Scope</span>
               <span class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-mono font-medium">100/vendor</span>
             </div>
-            <div class="text-[11.5px] text-slate-400 mt-0.5">Enterprise consolidation across all corporate vendors</div>
+            <div class="text-[11.5px] text-stone-400 mt-0.5">Enterprise consolidation across all corporate vendors</div>
           </div>
           <span class="w-7 h-7 rounded-full bg-white/10 group-hover:bg-white/20 flex items-center justify-center transition-all">
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
           </span>
         </button>
 
-        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2 px-1">Specific Vendors</div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-2 px-1">Specific Vendors</div>
         <div id="vendor-picker-list" class="space-y-2 max-h-60 overflow-y-auto pr-1"></div>
 
-        <button id="vendor-picker-new-btn" class="w-full mt-4 h-10 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-xl border border-slate-300 transition-all flex items-center justify-center gap-1.5">
-          <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <button id="vendor-picker-new-btn" class="w-full mt-4 h-10 bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold rounded-xl border border-stone-300 transition-all flex items-center justify-center gap-1.5">
+          <svg class="w-4 h-4 text-stone-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
           <span>Provision New Vendor</span>
         </button>
       </div>
 
       <div id="vendor-picker-new-view" class="hidden">
         <div class="mb-5 flex items-center gap-3">
-          <button id="vendor-picker-back-btn" type="button" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-all">
+          <button id="vendor-picker-back-btn" type="button" aria-label="Back to vendor list" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-600 transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           </button>
           <div>
-            <h1 class="font-display font-bold text-sm text-slate-900">Provision New Vendor</h1>
-            <p class="text-xs text-slate-500">Creates scoped dataset with clean ledger state.</p>
+            <h1 class="font-display font-bold text-sm text-stone-900">Provision New Vendor</h1>
+            <p class="text-xs text-stone-500">Creates scoped dataset with clean ledger state.</p>
           </div>
         </div>
         <form id="vendor-picker-new-form" class="space-y-3.5">
           <div class="space-y-1.5">
-            <label class="text-xs font-semibold text-slate-700">Vendor Corporate Name</label>
-            <input type="text" id="vendor-picker-new-name" required placeholder="e.g. Bharat Logistics Ltd" class="w-full h-9 px-3.5 bg-white border border-slate-300 rounded-xl text-xs focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/10">
+            <label class="text-xs font-semibold text-stone-700">Vendor Corporate Name</label>
+            <input type="text" id="vendor-picker-new-name" required placeholder="e.g. Bharat Logistics Ltd" class="w-full h-9 px-3.5 bg-white border border-stone-300 rounded-xl text-xs focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/10">
             <p id="vendor-picker-new-name-error" class="input-error-msg hidden">Enter a vendor name to continue.</p>
           </div>
           <div class="space-y-1.5">
-            <label class="text-xs font-semibold text-slate-700">Department <span class="font-normal text-slate-400">(optional)</span></label>
-            <input type="text" id="vendor-picker-new-dept" placeholder="e.g. Supply Chain" class="w-full h-9 px-3.5 bg-white border border-slate-300 rounded-xl text-xs focus:border-amber-500 focus:outline-none">
+            <label class="text-xs font-semibold text-stone-700">Department <span class="font-normal text-stone-400">(optional)</span></label>
+            <input type="text" id="vendor-picker-new-dept" placeholder="e.g. Supply Chain" class="w-full h-9 px-3.5 bg-white border border-stone-300 rounded-xl text-xs focus:border-amber-500 focus:outline-none">
           </div>
           <div class="space-y-1.5">
-            <label class="text-xs font-semibold text-slate-700">Category <span class="font-normal text-slate-400">(optional)</span></label>
-            <input type="text" id="vendor-picker-new-category" placeholder="e.g. Logistics & Freight" class="w-full h-9 px-3.5 bg-white border border-slate-300 rounded-xl text-xs focus:border-amber-500 focus:outline-none">
+            <label class="text-xs font-semibold text-stone-700">Category <span class="font-normal text-stone-400">(optional)</span></label>
+            <input type="text" id="vendor-picker-new-category" placeholder="e.g. Logistics & Freight" class="w-full h-9 px-3.5 bg-white border border-stone-300 rounded-xl text-xs focus:border-amber-500 focus:outline-none">
           </div>
-          <button type="submit" id="vendor-picker-new-submit" class="w-full h-10 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl shadow-md transition-all mt-2">
+          <button type="submit" id="vendor-picker-new-submit" class="w-full h-10 bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold rounded-xl shadow-md transition-all mt-2">
             Create & Launch Workspace
           </button>
         </form>
@@ -111,7 +111,7 @@
   <div id="app-shell" class="flex h-screen overflow-hidden">
 
     <!-- SIDEBAR -->
-    <aside id="app-sidebar" class="w-[260px] shrink-0 flex flex-col z-20">
+    <aside id="app-sidebar" aria-label="Primary navigation" class="w-[260px] shrink-0 flex flex-col z-20">
       <!-- App Brand Header -->
       <div class="h-[60px] flex items-center gap-3 px-5 border-b border-slate-800/80 shrink-0">
         <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-600/20 text-white">
@@ -191,36 +191,36 @@
     <div id="sidebar-backdrop" class="sidebar-backdrop"></div>
 
     <!-- CONTENT AREA -->
-    <div class="flex-1 flex flex-col overflow-hidden bg-slate-50">
+    <div class="flex-1 flex flex-col overflow-hidden bg-stone-50">
       
       <!-- TOP NAVIGATION BAR -->
       <header class="relative px-6 h-[60px] flex items-center justify-between shrink-0 z-10">
         <div class="flex items-center gap-3.5 min-w-0">
-          <button id="sidebar-toggle-btn" title="Open navigation menu" class="md:hidden w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-300 flex items-center justify-center shrink-0 transition-colors">
+          <button id="sidebar-toggle-btn" title="Open navigation menu" aria-label="Open navigation menu" class="md:hidden w-8 h-8 rounded-lg bg-white border border-stone-200 text-stone-600 hover:text-stone-900 hover:border-stone-300 flex items-center justify-center shrink-0 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
           </button>
-          <div class="hidden sm:flex w-8 h-8 rounded-lg bg-slate-900 text-white items-center justify-center font-mono text-[11px] font-bold shadow-sm">
+          <div class="hidden sm:flex w-8 h-8 rounded-lg bg-stone-900 text-white items-center justify-center font-mono text-[11px] font-bold shadow-sm">
             IN
           </div>
           <div class="min-w-0">
-            <h2 id="header-title" class="font-display text-[14px] font-bold tracking-tight text-slate-900 leading-none truncate flex items-center gap-2">
+            <h2 id="header-title" class="font-display text-[14px] font-bold tracking-tight text-stone-900 leading-none truncate flex items-center gap-2">
               <span>Audit Copilot Control Center</span>
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Live</span>
             </h2>
-            <p class="text-[11.5px] text-slate-500 hidden sm:block truncate mt-0.5">Automated 3-Way Reconciliation • Isolation Forest • LangChain Policy RAG</p>
+            <p class="text-[11.5px] text-stone-500 hidden sm:block truncate mt-0.5">Automated 3-Way Reconciliation • Isolation Forest • LangChain Policy RAG</p>
           </div>
         </div>
 
         <!-- Scope & Action Controls -->
         <div class="flex items-center gap-3 shrink-0">
           <div id="vendor-switcher-wrap" class="flex items-center gap-2 pl-2.5 pr-1 py-1 rounded-full">
-            <span class="text-[11px] font-display font-bold uppercase tracking-wider text-slate-400 hidden lg:block">Scope</span>
+            <span class="text-[11px] font-display font-bold uppercase tracking-wider text-stone-400 hidden lg:block">Scope</span>
             <select id="vendor-switcher" class="h-7 px-3 bg-transparent border-0 text-xs min-w-[170px] focus:outline-none">
               <option value="ALL">All Vendors (Global)</option>
             </select>
           </div>
 
-          <button data-view-target="rag" title="Open AI Copilot" class="hidden md:inline-flex w-8 h-8 items-center justify-center rounded-full bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 hover:border-amber-300 transition-colors shadow-xs">
+          <button data-view-target="rag" title="Open AI Copilot" aria-label="Open AI Copilot" class="hidden md:inline-flex w-8 h-8 items-center justify-center rounded-full bg-amber-50 border border-amber-200 text-amber-700 hover:bg-amber-100 hover:border-amber-300 transition-colors shadow-xs">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/></svg>
           </button>
 
@@ -229,9 +229,9 @@
             <span>Export Report</span>
           </button>
 
-          <div class="w-px h-6 bg-slate-200 hidden sm:block"></div>
+          <div class="w-px h-6 bg-stone-200 hidden sm:block"></div>
 
-          <button id="logout-btn" title="Exit Workspace / Switch Session" class="w-8 h-8 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300 hover:shadow-sm flex items-center justify-center transition-all">
+          <button id="logout-btn" title="Exit Workspace / Switch Session" aria-label="Exit workspace / switch session" class="w-8 h-8 rounded-full bg-white border border-stone-200 text-stone-500 hover:text-stone-900 hover:border-stone-300 hover:shadow-sm flex items-center justify-center transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
           </button>
         </div>
@@ -567,7 +567,7 @@
                 <span id="datacenter-scope-badge" class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-stone-900 text-white">
                   Scope: All Vendors
                 </span>
-                <button id="datacenter-refresh-btn" title="Refresh Dataset" class="btn-icon">
+                <button id="datacenter-refresh-btn" title="Refresh Dataset" aria-label="Refresh dataset" class="btn-icon">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                 </button>
                 <button id="datacenter-export-btn" class="btn-ghost h-9 !text-xs">
@@ -617,7 +617,7 @@
               <div class="relative flex-1 min-w-[220px] max-w-[380px]">
                 <svg class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 <input type="text" id="datacenter-search" placeholder="Search by vendor, Txn ID, amount, description..." class="w-full pl-9 pr-8">
-                <button id="datacenter-clear-search" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-600 flex items-center justify-center text-[10px]">✕</button>
+                <button id="datacenter-clear-search" aria-label="Clear search" class="hidden absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-stone-200 hover:bg-stone-300 text-stone-600 flex items-center justify-center text-[10px]">✕</button>
               </div>
               <select id="datacenter-category" class="min-w-[150px]">
                 <option value="ALL">All Categories</option>
