@@ -2,6 +2,7 @@ import { ApiClient } from '../api.js';
 import { Toast } from '../components/toast.js';
 import { Modal } from '../components/modal.js';
 import { Store } from '../store.js';
+import { formatINR } from '../utils/format.js';
 
 export const RagView = {
   async init() {
@@ -78,7 +79,7 @@ export const RagView = {
         const stats = await ApiClient.getLedgerStats();
         if (stats && document.getElementById('rag-ledger-scope')) {
           document.getElementById('rag-ledger-scope').textContent = stats.vendor_scope === 'ALL' ? `${stats.total_records} rows (100/vendor)` : `${stats.total_records} rows`;
-          document.getElementById('rag-ledger-scope').title = `Anomalies: ${stats.anomaly_records} • Amount: ₹${Number(stats.total_amount).toLocaleString('en-IN')}`;
+          document.getElementById('rag-ledger-scope').title = `Anomalies: ${stats.anomaly_records} • Amount: ${formatINR(stats.total_amount)}`;
         }
       } catch (e) { /* ignore stats failure */ }
     } catch (err) {

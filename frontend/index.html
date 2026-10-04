@@ -483,7 +483,7 @@
                 <div class="section-title">LangChain Policy RAG Copilot</div>
                 <div class="section-sub">Conversational copilot grounded strictly in corporate manuals and scoped general ledger entries.</div>
               </div>
-              <span id="rag-active-scope" class="hidden sm:inline-flex text-xs font-mono font-semibold px-3 py-1 rounded-full bg-slate-900 text-white shadow-xs">
+              <span id="rag-active-scope" class="hidden sm:inline-flex text-xs font-mono font-semibold px-3 py-1 rounded-full bg-stone-900 text-white shadow-xs">
                 Scope: All
               </span>
             </div>
@@ -491,12 +491,12 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-5 lg:h-[calc(100vh-210px)] lg:min-h-[580px]">
               <!-- Left Sidebar: Indexed Documents -->
               <div class="fintech-card p-5 flex flex-col min-h-[300px]">
-                <div class="font-display text-sm font-bold text-slate-900">Policy Knowledge Base</div>
-                <p class="text-xs text-slate-500 mt-1">ChromaDB indexed manuals used for RAG grounding.</p>
+                <div class="font-display text-sm font-bold text-stone-900">Policy Knowledge Base</div>
+                <p class="text-xs text-stone-500 mt-1">ChromaDB indexed manuals used for RAG grounding.</p>
 
                 <div id="rag-policy-doc-list" class="mt-4 space-y-2.5 flex-1 overflow-y-auto pr-1"></div>
 
-                <div class="mt-4 pt-4 border-t border-slate-200">
+                <div class="mt-4 pt-4 border-t border-stone-200">
                   <button id="rag-reingest-btn" class="w-full h-9 btn-primary justify-center rounded-xl text-xs shadow-xs">
                     Re-Index Policy PDFs
                   </button>
@@ -514,37 +514,37 @@
                   <div class="flex items-center gap-2.5">
                     <div class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold text-xs">AI</div>
                     <div>
-                      <div class="font-display text-[13.5px] font-bold text-slate-900 flex items-center gap-2">
+                      <div class="font-display text-[13.5px] font-bold text-stone-900 flex items-center gap-2">
                         Financial Auditor Assistant
                         <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold font-mono">Gemini 2.5 Flash</span>
                       </div>
-                      <div class="text-[11px] text-slate-500">Answers with exact policy limits and page citations</div>
+                      <div class="text-[11px] text-stone-500">Answers with exact policy limits and page citations</div>
                     </div>
                   </div>
-                  <span class="hidden sm:inline-flex text-[11px] font-bold px-2.5 py-1 rounded-full bg-slate-900 text-white font-mono">Compliance-Grounded</span>
+                  <span class="hidden sm:inline-flex text-[11px] font-bold px-2.5 py-1 rounded-full bg-stone-900 text-white font-mono">Compliance-Grounded</span>
                 </div>
 
                 <!-- Chat History Box -->
-                <div id="rag-chat-history" class="flex-1 p-5 overflow-y-auto space-y-3.5 bg-slate-50/50 min-h-[280px]">
+                <div id="rag-chat-history" class="flex-1 p-5 overflow-y-auto space-y-3.5 bg-stone-50/50 min-h-[280px]">
                   <div class="flex gap-3 justify-start">
-                    <div class="max-w-[85%] p-4 bg-white border border-slate-200 rounded-2xl rounded-tl-none text-xs text-slate-800 leading-relaxed shadow-sm space-y-2">
+                    <div class="max-w-[85%] p-4 bg-white border border-stone-200 rounded-2xl rounded-tl-none text-xs text-stone-800 leading-relaxed shadow-sm space-y-2">
                       <div class="font-medium">Namaste! I am your <b>AI Internal Auditor Assistant</b>. I provide policy-grounded guidance for travel limits, procurement rules, and ledger compliance.</div>
-                      <div class="text-[11.5px] text-slate-500">Ask about per diem allowances, split-transaction rules, or lodging ceilings.</div>
+                      <div class="text-[11.5px] text-stone-500">Ask about per diem allowances, split-transaction rules, or lodging ceilings.</div>
                     </div>
                   </div>
                 </div>
 
                 <!-- Suggested Prompts -->
-                <div class="px-4 py-2.5 bg-white border-t border-slate-200 flex flex-wrap gap-2 text-xs">
-                  <span class="text-slate-400 font-semibold text-[11px] self-center">Try:</span>
+                <div class="px-4 py-2.5 bg-white border-t border-stone-200 flex flex-wrap gap-2 text-xs">
+                  <span class="text-stone-400 font-semibold text-[11px] self-center">Try:</span>
                   <button class="suggested-prompt-chip">"What are the travel per diem allowance rules?"</button>
                   <button class="suggested-prompt-chip">"What is the single-quote procurement limit for purchases?"</button>
                   <button class="suggested-prompt-chip">"What is the 1 Lakh split-transaction rule? Cite page."</button>
                 </div>
 
                 <!-- Input Box -->
-                <div class="p-3 border-t border-slate-200 bg-white flex items-center gap-2">
-                  <input type="text" id="rag-user-input" placeholder="Ask a compliance or ledger question (e.g. Travel per diem limit in tier 1 cities)..." class="flex-1 h-10 px-4 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:border-amber-500 focus:bg-white placeholder:text-slate-400 transition-colors">
+                <div class="p-3 border-t border-stone-200 bg-white flex items-center gap-2">
+                  <input type="text" id="rag-user-input" placeholder="Ask a compliance or ledger question (e.g. Travel per diem limit in tier 1 cities)..." class="flex-1 h-10 px-4 bg-stone-50 border border-stone-300 rounded-xl text-xs focus:outline-none focus:border-amber-500 focus:bg-white placeholder:text-stone-400 transition-colors">
                   <button id="rag-send-btn" class="h-10 px-5 btn-primary rounded-xl font-semibold text-xs shadow-sm flex items-center gap-1.5 shrink-0">
                     <span>Send</span>
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
