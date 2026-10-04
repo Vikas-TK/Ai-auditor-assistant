@@ -523,6 +523,29 @@ textarea:focus-visible,
   border-radius: var(--radius-xs);
 }
 
+/* Inline form-field validation state — used for provisioning forms */
+.input-error {
+  border-color: var(--accent-danger) !important;
+  animation: fieldShake 0.32s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+.input-error-msg {
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--accent-danger);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+@keyframes fieldShake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60% { transform: translateX(3px); }
+}
+
 /* ═════════════════════════════════════════════════════════════════════
    Tables & Data Center Matrix
    ═════════════════════════════════════════════════════════════════════ */
@@ -1037,6 +1060,41 @@ input[type="range"]::-webkit-slider-thumb:hover {
   .confirm-dialog {
     max-width: 92vw;
   }
+
+  /* Sidebar becomes an off-canvas drawer below tablet width */
+  aside {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: 260px;
+    z-index: 50;
+    transform: translateX(-100%);
+    transition: transform var(--transition-base, 0.3s) cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  aside.sidebar-open {
+    transform: translateX(0);
+  }
+}
+
+/* Backdrop behind the off-canvas sidebar on mobile/tablet — hidden by default */
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebar-backdrop.active {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    z-index: 40;
+    animation: backdropFadeIn 0.2s ease both;
+  }
+}
+
+@keyframes backdropFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Mobile */

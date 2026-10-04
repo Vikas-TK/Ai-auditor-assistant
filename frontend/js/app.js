@@ -32,6 +32,7 @@ class App {
     this.bindNavigation();
     this.bindVendorSwitcher();
     this.bindLogout();
+    this.bindSidebarToggle();
 
     if (!Store.isAuthenticated()) {
       this.showSignIn();
@@ -78,8 +79,26 @@ class App {
         e.preventDefault();
         const target = btn.getAttribute('data-view-target');
         this.switchView(target);
+        this.closeSidebar();
       };
     });
+  }
+
+  bindSidebarToggle() {
+    const toggleBtn = document.getElementById('sidebar-toggle-btn');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    if (toggleBtn) toggleBtn.onclick = () => this.openSidebar();
+    if (backdrop) backdrop.onclick = () => this.closeSidebar();
+  }
+
+  openSidebar() {
+    document.getElementById('app-sidebar')?.classList.add('sidebar-open');
+    document.getElementById('sidebar-backdrop')?.classList.add('active');
+  }
+
+  closeSidebar() {
+    document.getElementById('app-sidebar')?.classList.remove('sidebar-open');
+    document.getElementById('sidebar-backdrop')?.classList.remove('active');
   }
 
   async refreshVendorSwitcherOptions(selectValue) {
@@ -130,6 +149,7 @@ class App {
         <div class="space-y-1.5">
           <label class="text-xs font-semibold text-stone-700 block">Vendor Name</label>
           <input type="text" id="new-vendor-name" required placeholder="e.g. Acme Technologies Pvt Ltd" class="w-full px-3.5 py-2.5 bg-white border border-stone-300 rounded-xl text-xs text-stone-900 placeholder:text-stone-400 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10">
+          <p id="new-vendor-name-error" class="input-error-msg hidden">Enter a vendor name to continue.</p>
         </div>
         <div class="space-y-1.5">
           <label class="text-xs font-semibold text-stone-700 block">Department (optional)</label>
@@ -147,9 +167,22 @@ class App {
 
     document.getElementById('add-vendor-form').onsubmit = async (e) => {
       e.preventDefault();
-      const vendor_name = document.getElementById('new-vendor-name').value.trim();
+      const nameInput = document.getElementById('new-vendor-name');
+      const errorMsg = document.getElementById('new-vendor-name-error');
+      const vendor_name = nameInput.value.trim();
       const department = document.getElementById('new-vendor-dept').value.trim() || null;
       const category = document.getElementById('new-vendor-category').value.trim() || null;
+
+      if (!vendor_name) {
+        nameInput.classList.add('input-error');
+        errorMsg?.classList.remove('hidden');
+        nameInput.focus();
+        nameInput.addEventListener('input', () => {
+          nameInput.classList.remove('input-error');
+          errorMsg?.classList.add('hidden');
+        }, { once: true });
+        return;
+      }
 
       try {
         const vendor = await ApiClient.createVendor({ vendor_name, department, category });

@@ -86,9 +86,19 @@ export const VendorPickerView = {
     const deptInput = document.getElementById('vendor-picker-new-dept');
     const categoryInput = document.getElementById('vendor-picker-new-category');
     const submitBtn = document.getElementById('vendor-picker-new-submit');
+    const errorMsg = document.getElementById('vendor-picker-new-name-error');
 
     const vendor_name = nameInput.value.trim();
-    if (!vendor_name) return;
+    if (!vendor_name) {
+      nameInput.classList.add('input-error');
+      errorMsg?.classList.remove('hidden');
+      nameInput.focus();
+      nameInput.addEventListener('input', () => {
+        nameInput.classList.remove('input-error');
+        errorMsg?.classList.add('hidden');
+      }, { once: true });
+      return;
+    }
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Creating...';
@@ -107,7 +117,7 @@ export const VendorPickerView = {
       Toast.show(err.message || 'Vendor creation failed', 'error');
     } finally {
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Create & Sign In';
+      submitBtn.textContent = 'Create & Launch Workspace';
     }
   }
 };
